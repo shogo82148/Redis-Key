@@ -27,6 +27,10 @@ subtest 'bind' => sub {
         $key->get;
     } qr/needs bind/, 'needs bind';
 
+    throws_ok {
+        $key->bind;
+    } qr/not passed/, 'not passed';
+
     my $key_bound = $key->bind(fugu => 'FUGU');
     ok($key_bound, 'bind');
     is($key_bound->get, 'foobar', 'get');
