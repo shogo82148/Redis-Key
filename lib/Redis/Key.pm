@@ -1,6 +1,7 @@
 package Redis::Key;
 use strict;
 use warnings;
+use Carp;
 our $VERSION = '0.01';
 
 use Redis;
@@ -12,9 +13,25 @@ sub new {
 
     $self->{redis} = $args{redis} || Redis->new(%args);
     $self->{key} = $args{key};
+    $self->{need_bind} = $args{need_bind};
     return $self;
 }
 
+sub bind {
+    my $self = shift;
+    my $key = $self->{key};
+    my %hash = @_;
+
+    $key =~ s!{(\w+)}!
+        $hash{$1} // croak("$1 is not passed to $key");
+    !eg;
+
+    return __PACKAGE__->new(
+        redis     => $self->{redis},
+        key       => $key,
+        need_bind => 0,
+    );
+}
 
 sub DESTROY { }
 
@@ -28,6 +45,10 @@ sub AUTOLOAD {
       my $redis = $self->{redis};
       my $key = $self->{key};
       my $wantarray = wantarray;
+
+      if($self->{need_bind}) {
+          croak "$key needs bind";
+      }
 
       if(!$wantarray) {
           $redis->$command($key, @_);
