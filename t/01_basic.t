@@ -30,6 +30,19 @@ subtest 'bind' => sub {
     my $key_bound = $key->bind(fugu => 'FUGU');
     ok($key_bound, 'bind');
     is($key_bound->get, 'foobar', 'get');
+
+    $redis->flushall;
+};
+
+subtest 'keys' => sub {
+    $redis->set("hoge:$_:piyo", 'foobar') for (1..10);
+    $redis->set("Hoge:$_:piyo", 'foobar') for (1..10);
+    my $key = Redis::Key->new(redis => $redis, key => 'hoge:{fugu}:piyo', need_bind => 1);
+    my @keys = $key->keys;
+    is_deeply([sort $key->keys], [sort map {"hoge:$_:piyo"} (1..10)], 'keys');
+    is(scalar $key->keys, 10, 'keys count');
+
+    $redis->flushall;
 };
 
 done_testing;

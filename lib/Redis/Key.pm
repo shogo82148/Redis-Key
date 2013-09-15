@@ -20,6 +20,18 @@ sub new {
 sub redis { shift->{redis} }
 sub key { shift->{key} }
 
+sub keys {
+    my $self = shift;
+    my $key = $self->{key};
+    if($self->{need_bind}) {
+        $key =~ s!{\w+}!*!g;
+        my $redis = $self->{redis};
+        return $redis->keys($key);
+    } else {
+        return ($key);
+    }
+}
+
 sub bind {
     my $self = shift;
     my $key = $self->{key};
