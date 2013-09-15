@@ -17,6 +17,9 @@ sub new {
     return $self;
 }
 
+sub redis { shift->{redis} }
+sub key { shift->{key} }
+
 sub bind {
     my $self = shift;
     my $key = $self->{key};
