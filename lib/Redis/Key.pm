@@ -1,4 +1,7 @@
 package Redis::Key;
+
+# ABSTRACT: wrapper class of Redis' key
+
 use strict;
 use warnings;
 use Carp;
