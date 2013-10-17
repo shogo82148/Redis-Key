@@ -31,7 +31,7 @@ sub keys {
         my $redis = $self->{redis};
         return $redis->keys($key);
     } else {
-        return ($key);
+        return wantarray ? ($key) : 1;
     }
 }
 

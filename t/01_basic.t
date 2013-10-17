@@ -49,5 +49,15 @@ subtest 'keys' => sub {
     $redis->flushall;
 };
 
+
+subtest 'keys for normal key' => sub {
+    my $key = Redis::Key->new(redis => $redis, key => 'hoge:{fugu}:piyo');
+    my @keys = $key->keys;
+    is_deeply([sort $key->keys], [ "hoge:{fugu}:piyo" ], 'keys');
+    is(scalar $key->keys, 1, 'keys count');
+
+    $redis->flushall;
+};
+
 done_testing;
 
