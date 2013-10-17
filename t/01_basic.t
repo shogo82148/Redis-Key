@@ -31,6 +31,36 @@ subtest 'list' => sub {
 
     my @l = $key->lrange(-3, 2);
     is_deeply([@l], ['one', 'two', 'three'], 'list context');
+
+    $redis->flushall;
+};
+
+subtest 'wait_all_responses' => sub {
+    my $key = Redis::Key->new(redis => $redis, key => 'hoge');
+
+    my $cnt = 0;
+    my $s;
+    my $cb = sub {
+        my ($res, $err) = @_;
+        if($res && !$err) {
+            $cnt++;
+        }
+    };
+    $key->rpush('one', $cb);
+    $key->rpush('two', $cb);
+    $key->rpush('three', $cb);
+    $key->lrange(
+        0, -1,
+        sub {
+            $s = shift;
+        }
+    );
+    $key->wait_all_responses;
+
+    is $cnt, 3, 'call all callback';
+    is_deeply $s, ['one', 'two', 'three'], 'result of lrange';
+
+    $redis->flushall;
 };
 
 subtest 'bind' => sub {
