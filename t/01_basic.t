@@ -19,6 +19,20 @@ subtest 'get/set' => sub {
     $redis->flushall;
 };
 
+subtest 'list' => sub {
+    my $key = Redis::Key->new(redis => $redis, key => 'hoge');
+
+    ok($key->rpush('one'), 'rpush one');
+    ok($key->rpush('two'), 'rpush two');
+    ok($key->rpush('three'), 'rpush three');
+
+    my $s = $key->lrange(-3, 2);
+    is_deeply($s, ['one', 'two', 'three'], 'scalar context');
+
+    my @l = $key->lrange(-3, 2);
+    is_deeply([@l], ['one', 'two', 'three'], 'list context');
+};
+
 subtest 'bind' => sub {
     my $key = Redis::Key->new(redis => $redis, key => 'hoge:{fugu}:piyo', need_bind => 1);
     $redis->set('hoge:FUGU:piyo', 'foobar');
