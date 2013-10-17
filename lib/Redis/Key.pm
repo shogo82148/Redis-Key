@@ -62,21 +62,12 @@ sub AUTOLOAD {
       my $self = shift;
       my $redis = $self->{redis};
       my $key = $self->{key};
-      my $wantarray = wantarray;
 
       if($self->{need_bind}) {
           croak "$key needs bind";
       }
 
-      if(!$wantarray) {
-          $redis->$command($key, @_);
-      } elsif($wantarray) {
-          my @result = $redis->$command($key, @_);
-          return @result;
-      } else {
-          my $result = $redis->$command($key, @_);
-          return $result;
-      }
+      $redis->$command($key, @_);
   };
 
   # Save this method for future calls
