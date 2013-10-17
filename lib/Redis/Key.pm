@@ -23,6 +23,11 @@ sub new {
 sub redis { shift->{redis} }
 sub key { shift->{key} }
 
+sub wait_all_responses { shift->{redis}->wait_all_responses }
+sub wait_one_responses { shift->{redis}->wait_one_response }
+sub ping { shift->{redis}->ping }
+sub info { shift->{redis}->info }
+
 sub keys {
     my $self = shift;
     my $key = $self->{key};
