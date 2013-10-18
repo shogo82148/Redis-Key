@@ -35,10 +35,6 @@
       },
       "develop" : {
          "requires" : {
-            "Module::Install" : "0",
-            "Module::Install::AuthorTests" : "0",
-            "Module::Install::CPANfile" : "0",
-            "Module::Install::Repository" : "0",
             "Test::CPAN::Meta" : "0",
             "Test::MinimumVersion" : "0.10108",
             "Test::Pod" : "1.41",
@@ -47,15 +43,16 @@
       },
       "runtime" : {
          "requires" : {
-            "Redis" : "0"
+            "perl" : "5.008001"
          }
       },
       "test" : {
          "requires" : {
+            "File::Temp" : "0",
+            "Redis" : "0",
+            "Test::Exception" : "0",
             "Test::More" : "0",
-            "Test::Perl::Critic" : "0",
-            "Test::RedisServer" : "0",
-            "Test::Spelling" : "0"
+            "Test::RedisServer" : "0"
          }
       }
    },
