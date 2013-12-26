@@ -1,7 +1,5 @@
 package Redis::Key;
 
-# ABSTRACT: wrapper class of Redis' key
-
 use strict;
 use warnings;
 use Carp;
@@ -85,9 +83,10 @@ sub AUTOLOAD {
 1;
 __END__
 
-=head1 AUTHOR
+=head1
 
-Ichinose Shogo E<lt>shogo82148@gmail.comE<gt>
+Redis::Key - wrapper class of Redis' key
+
 
 =head1 SYNOPSIS
 
@@ -106,9 +105,16 @@ Ichinose Shogo E<lt>shogo82148@gmail.comE<gt>
   $key_fugu->set('foobar');      # => $redis->set('hoge:FUGU:piyo', 'foobar');
   my @keys = $key_unbound->keys; # => $redis->keys('hoge:*:piyo');
 
+
 =head1 DESCRIPTION
 
 Redis::Key is a wrapper class of Redis' keys.
+
+
+=head1 AUTHOR
+
+Ichinose Shogo E<lt>shogo82148@gmail.comE<gt>
+
 
 =head1 SEE ALSO
 
