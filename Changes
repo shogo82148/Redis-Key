@@ -1,6 +1,9 @@
 Revision history for Perl extension Redis::Key
 
 {{$NEXT}}
+        - support SCAN command
+        - disable FLUSHALL, FLUSHDB, QUIT, SELECT, SHUTDOWN, SLAVEOF
+        - some commands pass through
 
 0.01 2013-10-18T14:13:06Z
         - original version
