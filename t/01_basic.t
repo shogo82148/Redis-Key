@@ -138,5 +138,28 @@ subtest 'scan for normal key' => sub {
 };
 
 
+subtest 'invalid commands' => sub {
+    # these commands are invalid because they maybe change another key
+    my $key = Redis::Key->new(redis => $redis, key => 'hoge');
+    throws_ok { $key->flushall; }    qr/flushall/;
+    throws_ok { $key->flushdb; }     qr/flushdb/;
+    throws_ok { $key->quit; }        qr/quit/;
+    throws_ok { $key->select; }      qr/select/;
+    throws_ok { $key->shutdown; }    qr/shutdown/;
+    throws_ok { $key->slaveof; }     qr/slaveof/;
+    $redis->flushall;
+};
+
+subtest 'DEL command' => sub {
+    my $key = Redis::Key->new(redis => $redis, key => 'hoge');
+    ok $key->set('value'), 'set value';
+    ok $key->exists, 'the key exists';
+    ok $key->del, 'can delete the key';
+    ok !$key->exists, 'the key does not exist after delete';
+
+    throws_ok { $key->del('aother:key'); } qr/del/, 'cannot delete another key';
+    $redis->flushall;
+};
+
 done_testing;
 
