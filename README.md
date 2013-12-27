@@ -1,6 +1,8 @@
-# AUTHOR
+# 
 
-Ichinose Shogo <shogo82148@gmail.com>
+Redis::Key - wrapper class of Redis' key
+
+
 
 # SYNOPSIS
 
@@ -21,9 +23,19 @@ Ichinose Shogo <shogo82148@gmail.com>
     $key_fugu->set('foobar');      # => $redis->set('hoge:FUGU:piyo', 'foobar');
     my @keys = $key_unbound->keys; # => $redis->keys('hoge:*:piyo');
 
+
+
 # DESCRIPTION
 
 Redis::Key is a wrapper class of Redis' keys.
+
+
+
+# AUTHOR
+
+Ichinose Shogo <shogo82148@gmail.com>
+
+
 
 # SEE ALSO
 
