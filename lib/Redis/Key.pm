@@ -1,4 +1,5 @@
 package Redis::Key;
+
 use strict;
 use warnings;
 use Carp;
@@ -20,6 +21,11 @@ sub new {
 sub redis { shift->{redis} }
 sub key { shift->{key} }
 
+sub wait_all_responses { shift->{redis}->wait_all_responses }
+sub wait_one_responses { shift->{redis}->wait_one_response }
+sub ping { shift->{redis}->ping }
+sub info { shift->{redis}->info }
+
 sub keys {
     my $self = shift;
     my $key = $self->{key};
@@ -28,7 +34,7 @@ sub keys {
         my $redis = $self->{redis};
         return $redis->keys($key);
     } else {
-        return ($key);
+        return wantarray ? ($key) : 1;
     }
 }
 
@@ -71,21 +77,12 @@ sub AUTOLOAD {
       my $self = shift;
       my $redis = $self->{redis};
       my $key = $self->{key};
-      my $wantarray = wantarray;
 
       if($self->{need_bind}) {
           croak "$key needs bind";
       }
 
-      if(!$wantarray) {
-          $redis->$command($key, @_);
-      } elsif($wantarray) {
-          my @result = $redis->$command($key, @_);
-          return @result;
-      } else {
-          my $result = $redis->$command($key, @_);
-          return $result;
-      }
+      $redis->$command($key, @_);
   };
 
   # Save this method for future calls
@@ -98,21 +95,38 @@ sub AUTOLOAD {
 1;
 __END__
 
-=head1 NAME
+=head1
 
-Redis::Key -
+Redis::Key - wrapper class of Redis' key
+
 
 =head1 SYNOPSIS
 
+  use Redis;
   use Redis::Key;
+  my $redis = Redis->new;
+  
+  # basic usage
+  my $key = Redis::Key->new(redis => $redis, key => 'hoge');
+  $key->set('fuga');  # => $redis->set('hoge', 'fuga');
+  print $key->get;    # => $redis->get('hoge');
+  
+  # bind
+  my $key_unbound = Redis::Key->new(redis => $redis, key => 'hoge:{fugu}:piyo', need_bind => 1);
+  my $key_fugu = $key_unbound->bind(fugu => 'FUGU');
+  $key_fugu->set('foobar');      # => $redis->set('hoge:FUGU:piyo', 'foobar');
+  my @keys = $key_unbound->keys; # => $redis->keys('hoge:*:piyo');
+
 
 =head1 DESCRIPTION
 
-Redis::Key is
+Redis::Key is a wrapper class of Redis' keys.
+
 
 =head1 AUTHOR
 
 Ichinose Shogo E<lt>shogo82148@gmail.comE<gt>
+
 
 =head1 SEE ALSO
 
