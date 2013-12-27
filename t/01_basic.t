@@ -49,5 +49,25 @@ subtest 'keys' => sub {
     $redis->flushall;
 };
 
+
+subtest 'scan' => sub {
+    $redis->set("hoge:$_:piyo", 'foobar') for (1..10);
+    $redis->set("Hoge:$_:piyo", 'foobar') for (1..10);
+    my $key = Redis::Key->new(redis => $redis, key => 'hoge:{fugu}:piyo', need_bind => 1);
+
+    my @keys;
+    my ($iter, $list) = (0, []);
+    while(1) {
+        ($iter, $list) = $key->scan($iter);
+        push @keys, @$list;
+        last if $iter == 0;
+    }
+
+    is_deeply([sort @keys], [sort map {"hoge:$_:piyo"} (1..10)], 'keys');
+
+    $redis->flushall;
+};
+
+
 done_testing;
 

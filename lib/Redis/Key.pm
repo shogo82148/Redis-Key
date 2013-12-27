@@ -32,6 +32,18 @@ sub keys {
     }
 }
 
+sub scan {
+    my ($self, $iter, @args) = @_;
+    my $key = $self->{key};
+    if($self->{need_bind}) {
+        $key =~ s!{\w+}!*!g;
+        my $redis = $self->{redis};
+        return $redis->scan($iter, @args, MATCH => $key);
+    } else {
+        return (0, []);
+    }
+}
+
 sub bind {
     my $self = shift;
     my $key = $self->{key};
