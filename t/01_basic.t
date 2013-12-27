@@ -11,6 +11,9 @@ eval { Test::RedisServer->new } or plan skip_all => 'redis-server is required in
 my $redis_server = Test::RedisServer->new;
 my $redis = Redis->new( $redis_server->connect_info );
 
+my $redis_version = version->parse($redis->info->{redis_version});
+
+
 subtest 'get/set' => sub {
     my $key = Redis::Key->new(redis => $redis, key => 'hoge');
 
@@ -107,6 +110,9 @@ subtest 'keys for normal key' => sub {
 
 
 subtest 'scan' => sub {
+    plan skip_all => 'your redis does not support SCAN command'
+        unless $redis_version >= '2.8.0';
+
     $redis->set("hoge:$_:piyo", 'foobar') for (1..10);
     $redis->set("Hoge:$_:piyo", 'foobar') for (1..10);
     my $key = Redis::Key->new(redis => $redis, key => 'hoge:{fugu}:piyo', need_bind => 1);
