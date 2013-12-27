@@ -130,5 +130,13 @@ subtest 'scan' => sub {
     $redis->flushall;
 };
 
+
+subtest 'scan for normal key' => sub {
+    my $key = Redis::Key->new(redis => $redis, key => 'hoge:{fugu}:piyo');
+    is_deeply([$key->scan], [0, ['hoge:{fugu}:piyo']], 'returns only one key');
+    $redis->flushall;
+};
+
+
 done_testing;
 

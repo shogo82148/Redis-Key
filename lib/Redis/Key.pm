@@ -46,7 +46,7 @@ sub scan {
         my $redis = $self->{redis};
         return $redis->scan($iter, @args, MATCH => $key);
     } else {
-        return (0, []);
+        return (0, [$key]);
     }
 }
 
