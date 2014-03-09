@@ -152,7 +152,7 @@ sub AUTOLOAD {
 1;
 __END__
 
-=head1
+=head1 NAME
 
 Redis::Key - wrapper class of Redis' key
 
