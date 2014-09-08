@@ -6,4 +6,6 @@ on 'test' => sub {
    requires 'Test::Exception';
    requires 'File::Temp';
    requires 'Test::RedisServer';
+   requires 'Test::Kwalitee';
+   requires 'Test::Kwalitee::Extra';
 };
