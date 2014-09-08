@@ -1,5 +1,5 @@
 requires 'perl', '5.008001';
-recommends 'Redis';
+requires 'Redis';
 
 on 'test' => sub {
    requires 'Test::More';
