@@ -9,3 +9,7 @@ perl:
   - "5.12"
   - "5.10"
 install: cpanm --with-develop --installdeps --notest .
+before_install:
+  cpanm Minilla Test::CPAN::Meta Test::Pod Test::MinimumVersion::Fast
+script:
+  minil test --all
